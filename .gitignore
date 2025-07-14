@@ -1,0 +1,50 @@
+
+# Python
+__pycache__/
+*.py[cod]
+*.class
+*.so
+.Python
+venv/
+env/
+ENV/
+
+# Model files (large)
+*.pth
+*.pt
+*.model
+
+# Data files (large)
+data/training_pairs/*.dng
+data/training_pairs/*.arw
+data/results/*/
+*.jpg
+*.png
+*.tiff
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Large files
+*.zip
+*.tar.gz
+*.rar
+
+# Keep structure but ignore large content
+data/training_pairs/.gitkeep
+data/results/.gitkeep
+luts/*.cube
+luts/*.b64.txt
