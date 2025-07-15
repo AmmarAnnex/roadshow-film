@@ -2,34 +2,39 @@
 # Python
 __pycache__/
 *.py[cod]
-*.class
+*$py.class
 *.so
 .Python
 venv/
 env/
 ENV/
+*.pyc
+.pytest_cache/
 
 # Model files (large)
 *.pth
 *.pt
 *.model
+*.ckpt
 
-# Data files (large)
+# Training data (large files)
 data/training_pairs/*.dng
 data/training_pairs/*.arw
 data/results/*/
+data/debug*/
 *.jpg
 *.png
 *.tiff
+*.jpeg
 
-# Logs
+# Logs and temp files
 *.log
+*.tmp
+*.temp
 
-# OS
+# OS specific
 .DS_Store
 Thumbs.db
-
-# IDE
 .vscode/
 .idea/
 *.swp
@@ -43,8 +48,12 @@ Thumbs.db
 *.tar.gz
 *.rar
 
-# Keep structure but ignore large content
-data/training_pairs/.gitkeep
-data/results/.gitkeep
-luts/*.cube
-luts/*.b64.txt
+# Keep directory structure
+!data/training_pairs/.gitkeep
+!data/results/.gitkeep
+!data/.gitkeep
+
+# LUT files (keep these - they're reference data)
+# Commenting out to include LUTs as they're needed for model
+# luts/*.cube
+# luts/*.b64.txt
