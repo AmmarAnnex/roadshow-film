@@ -1,0 +1,25 @@
+{
+  "scene_types": [
+    "indoor",
+    "outdoor",
+    "portrait",
+    "landscape"
+  ],
+  "capture_requirements": {
+    "min_images": 50,
+    "max_images": 200,
+    "camera_poses": "auto_colmap",
+    "lighting_conditions": [
+      "natural",
+      "mixed",
+      "artificial"
+    ]
+  },
+  "training_parameters": {
+    "instant_ngp": {
+      "resolution": 512,
+      "iterations": 10000,
+      "learning_rate": 0.01
+    }
+  }
+}

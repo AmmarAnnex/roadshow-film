@@ -1,0 +1,18 @@
+{
+  "hardware": {
+    "pi_version": "Pi 5",
+    "ai_camera": "Sony IMX500",
+    "light_sensors": 3,
+    "sensor_types": [
+      "AS7341_spectral",
+      "TSL2591_dynamic",
+      "VEML7700_ambient"
+    ]
+  },
+  "integration_goals": {
+    "real_time_depth": true,
+    "ambient_light_analysis": true,
+    "spectral_color_analysis": true,
+    "scene_understanding": true
+  }
+}

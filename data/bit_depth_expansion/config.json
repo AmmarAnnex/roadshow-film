@@ -1,0 +1,12 @@
+{
+  "source_format": "8bit_sRGB",
+  "target_format": "10bit_Log",
+  "expansion_method": "neural_inverse_tone_mapping",
+  "training_approach": "synthetic_hdr_pairs",
+  "validation_metrics": [
+    "psnr",
+    "ssim",
+    "delta_e",
+    "dynamic_range"
+  ]
+}

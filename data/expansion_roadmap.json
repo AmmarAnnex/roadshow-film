@@ -1,0 +1,36 @@
+{
+  "Phase 1: Current Session (26 new pairs)": {
+    "status": "ready_to_process",
+    "pairs": "031-056",
+    "focus": "Indoor subjects, varied lighting",
+    "next_steps": [
+      "rename_files",
+      "update_metadata",
+      "train_v1.5"
+    ]
+  },
+  "Phase 2: Park Session (25 more pairs)": {
+    "status": "planned",
+    "pairs": "057-081",
+    "focus": "Outdoor, natural lighting, portraits",
+    "equipment": "iPhone 2.5x + Sony 50mm f/1.4"
+  },
+  "Phase 3: Blackmagic Integration": {
+    "status": "hardware_ready",
+    "goal": "Video frame extraction training",
+    "benefit": "100+ frames per scene vs 1 still",
+    "workflow": "parallel_capture \u2192 frame_extraction \u2192 training"
+  },
+  "Phase 4: NeRF Enhancement": {
+    "status": "research_validated",
+    "goal": "3D scene understanding for color science",
+    "method": "Instant-NGP on RTX 2080",
+    "application": "synthetic_training_data + lighting_analysis"
+  },
+  "Phase 5: Bit-Depth Expansion": {
+    "status": "conceptual",
+    "goal": "8-bit \u2192 10-bit log-like expansion",
+    "revolutionary": "Mobile filmmaking game-changer",
+    "technical": "Neural inverse tone mapping"
+  }
+}

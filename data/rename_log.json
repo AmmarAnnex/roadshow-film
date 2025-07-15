@@ -1,0 +1,189 @@
+{
+  "timestamp": "2025-07-15T11:45:09.311577",
+  "start_number": 31,
+  "pairs_renamed": 26,
+  "pairs": [
+    {
+      "number": 31,
+      "iphone_file": "data/training_pairs/iphone_031.dng",
+      "sony_file": "data/training_pairs/sony_031.arw",
+      "original_iphone": "IMG_0669.DNG",
+      "original_sony": "DSC01298.ARW"
+    },
+    {
+      "number": 32,
+      "iphone_file": "data/training_pairs/iphone_032.dng",
+      "sony_file": "data/training_pairs/sony_032.arw",
+      "original_iphone": "IMG_0670.DNG",
+      "original_sony": "DSC01299.ARW"
+    },
+    {
+      "number": 33,
+      "iphone_file": "data/training_pairs/iphone_033.dng",
+      "sony_file": "data/training_pairs/sony_033.arw",
+      "original_iphone": "IMG_0671.DNG",
+      "original_sony": "DSC01300.ARW"
+    },
+    {
+      "number": 34,
+      "iphone_file": "data/training_pairs/iphone_034.dng",
+      "sony_file": "data/training_pairs/sony_034.arw",
+      "original_iphone": "IMG_0672.DNG",
+      "original_sony": "DSC01301.ARW"
+    },
+    {
+      "number": 35,
+      "iphone_file": "data/training_pairs/iphone_035.dng",
+      "sony_file": "data/training_pairs/sony_035.arw",
+      "original_iphone": "IMG_0695.DNG",
+      "original_sony": "DSC01302.ARW"
+    },
+    {
+      "number": 36,
+      "iphone_file": "data/training_pairs/iphone_036.dng",
+      "sony_file": "data/training_pairs/sony_036.arw",
+      "original_iphone": "IMG_0696.DNG",
+      "original_sony": "DSC01303.ARW"
+    },
+    {
+      "number": 37,
+      "iphone_file": "data/training_pairs/iphone_037.dng",
+      "sony_file": "data/training_pairs/sony_037.arw",
+      "original_iphone": "IMG_0697.DNG",
+      "original_sony": "DSC01304.ARW"
+    },
+    {
+      "number": 38,
+      "iphone_file": "data/training_pairs/iphone_038.dng",
+      "sony_file": "data/training_pairs/sony_038.arw",
+      "original_iphone": "IMG_0698.DNG",
+      "original_sony": "DSC01305.ARW"
+    },
+    {
+      "number": 39,
+      "iphone_file": "data/training_pairs/iphone_039.dng",
+      "sony_file": "data/training_pairs/sony_039.arw",
+      "original_iphone": "IMG_0699.DNG",
+      "original_sony": "DSC01306.ARW"
+    },
+    {
+      "number": 40,
+      "iphone_file": "data/training_pairs/iphone_040.dng",
+      "sony_file": "data/training_pairs/sony_040.arw",
+      "original_iphone": "IMG_0700.DNG",
+      "original_sony": "DSC01307.ARW"
+    },
+    {
+      "number": 41,
+      "iphone_file": "data/training_pairs/iphone_041.dng",
+      "sony_file": "data/training_pairs/sony_041.arw",
+      "original_iphone": "IMG_0701.DNG",
+      "original_sony": "DSC01308.ARW"
+    },
+    {
+      "number": 42,
+      "iphone_file": "data/training_pairs/iphone_042.dng",
+      "sony_file": "data/training_pairs/sony_042.arw",
+      "original_iphone": "IMG_0702.DNG",
+      "original_sony": "DSC01309.ARW"
+    },
+    {
+      "number": 43,
+      "iphone_file": "data/training_pairs/iphone_043.dng",
+      "sony_file": "data/training_pairs/sony_043.arw",
+      "original_iphone": "IMG_0703.DNG",
+      "original_sony": "DSC01310.ARW"
+    },
+    {
+      "number": 44,
+      "iphone_file": "data/training_pairs/iphone_044.dng",
+      "sony_file": "data/training_pairs/sony_044.arw",
+      "original_iphone": "IMG_0704.DNG",
+      "original_sony": "DSC01311.ARW"
+    },
+    {
+      "number": 45,
+      "iphone_file": "data/training_pairs/iphone_045.dng",
+      "sony_file": "data/training_pairs/sony_045.arw",
+      "original_iphone": "IMG_0705.DNG",
+      "original_sony": "DSC01312.ARW"
+    },
+    {
+      "number": 46,
+      "iphone_file": "data/training_pairs/iphone_046.dng",
+      "sony_file": "data/training_pairs/sony_046.arw",
+      "original_iphone": "IMG_0706.DNG",
+      "original_sony": "DSC01313.ARW"
+    },
+    {
+      "number": 47,
+      "iphone_file": "data/training_pairs/iphone_047.dng",
+      "sony_file": "data/training_pairs/sony_047.arw",
+      "original_iphone": "IMG_0707.DNG",
+      "original_sony": "DSC01314.ARW"
+    },
+    {
+      "number": 48,
+      "iphone_file": "data/training_pairs/iphone_048.dng",
+      "sony_file": "data/training_pairs/sony_048.arw",
+      "original_iphone": "IMG_0708.DNG",
+      "original_sony": "DSC01315.ARW"
+    },
+    {
+      "number": 49,
+      "iphone_file": "data/training_pairs/iphone_049.dng",
+      "sony_file": "data/training_pairs/sony_049.arw",
+      "original_iphone": "IMG_0709.DNG",
+      "original_sony": "DSC01316.ARW"
+    },
+    {
+      "number": 50,
+      "iphone_file": "data/training_pairs/iphone_050.dng",
+      "sony_file": "data/training_pairs/sony_050.arw",
+      "original_iphone": "IMG_0710.DNG",
+      "original_sony": "DSC01317.ARW"
+    },
+    {
+      "number": 51,
+      "iphone_file": "data/training_pairs/iphone_051.dng",
+      "sony_file": "data/training_pairs/sony_051.arw",
+      "original_iphone": "IMG_0711.DNG",
+      "original_sony": "DSC01318.ARW"
+    },
+    {
+      "number": 52,
+      "iphone_file": "data/training_pairs/iphone_052.dng",
+      "sony_file": "data/training_pairs/sony_052.arw",
+      "original_iphone": "IMG_0712.DNG",
+      "original_sony": "DSC01319.ARW"
+    },
+    {
+      "number": 53,
+      "iphone_file": "data/training_pairs/iphone_053.dng",
+      "sony_file": "data/training_pairs/sony_053.arw",
+      "original_iphone": "IMG_0713.DNG",
+      "original_sony": "DSC01320.ARW"
+    },
+    {
+      "number": 54,
+      "iphone_file": "data/training_pairs/iphone_054.dng",
+      "sony_file": "data/training_pairs/sony_054.arw",
+      "original_iphone": "IMG_0714.DNG",
+      "original_sony": "DSC01321.ARW"
+    },
+    {
+      "number": 55,
+      "iphone_file": "data/training_pairs/iphone_055.dng",
+      "sony_file": "data/training_pairs/sony_055.arw",
+      "original_iphone": "IMG_0715.DNG",
+      "original_sony": "DSC01322.ARW"
+    },
+    {
+      "number": 56,
+      "iphone_file": "data/training_pairs/iphone_056.dng",
+      "sony_file": "data/training_pairs/sony_056.arw",
+      "original_iphone": "IMG_0716.DNG",
+      "original_sony": "DSC01323.ARW"
+    }
+  ]
+}
