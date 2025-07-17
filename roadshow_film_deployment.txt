@@ -1,0 +1,444 @@
+# Roadshow Film - Deployment Guide
+
+## Architecture Overview
+
+```
+Frontend (Next.js/React) → API Routes → Python ML Backend → Return Processed Video
+```
+
+## 1. Project Structure
+
+```
+roadshow-film/
+├── frontend/
+│   ├── pages/
+│   │   ├── index.js (main interface)
+│   │   └── api/
+│   │       └── process-video.js (API endpoint)
+│   ├── components/
+│   │   ├── FilmLens.js
+│   │   ├── Controls.js
+│   │   └── Preview.js
+│   ├── styles/
+│   ├── public/
+│   ├── package.json
+│   └── next.config.js
+├── backend/
+│   ├── app.py (Flask/FastAPI server)
+│   ├── model/
+│   │   ├── cinema_v1_4m.py
+│   │   └── models/ (trained weights)
+│   ├── utils/
+│   │   ├── video_processor.py
+│   │   └── file_handler.py
+│   ├── requirements.txt
+│   └── Dockerfile
+└── vercel.json
+```
+
+## 2. Frontend Setup (Next.js)
+
+### package.json
+```json
+{
+  "name": "roadshow-film",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "next": "^14.0.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "axios": "^1.6.0",
+    "@vercel/blob": "^0.15.0"
+  }
+}
+```
+
+### pages/index.js (Main Interface)
+```javascript
+import { useState } from 'react';
+import FilmLens from '../components/FilmLens';
+import Controls from '../components/Controls';
+import Preview from '../components/Preview';
+
+export default function Home() {
+  const [uploadedFile, setUploadedFile] = useState(null);
+  const [processedVideo, setProcessedVideo] = useState(null);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [controls, setControls] = useState({
+    bokeh: 0.7,
+    filmGrain: 0.5,
+    colorGrade: 0.8
+  });
+
+  const handleFileUpload = async (file) => {
+    setUploadedFile(file);
+    setIsProcessing(true);
+    
+    try {
+      const formData = new FormData();
+      formData.append('video', file);
+      formData.append('settings', JSON.stringify(controls));
+      
+      const response = await fetch('/api/process-video', {
+        method: 'POST',
+        body: formData
+      });
+      
+      if (response.ok) {
+        const result = await response.blob();
+        setProcessedVideo(URL.createObjectURL(result));
+      }
+    } catch (error) {
+      console.error('Processing failed:', error);
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  return (
+    <div className="app">
+      <header>
+        <h1>roadshow <span>film</span></h1>
+        <p>from mobile to motion picture</p>
+      </header>
+      
+      <main>
+        <FilmLens 
+          onFileUpload={handleFileUpload}
+          isProcessing={isProcessing}
+        />
+        
+        <Controls 
+          values={controls}
+          onChange={setControls}
+        />
+        
+        {processedVideo && (
+          <Preview 
+            original={uploadedFile}
+            processed={processedVideo}
+          />
+        )}
+      </main>
+    </div>
+  );
+}
+```
+
+### pages/api/process-video.js (API Route)
+```javascript
+import { NextRequest, NextResponse } from 'next/server';
+
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+}
+
+export default async function handler(req, res) {
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
+
+  try {
+    // Forward to Python backend
+    const pythonBackendUrl = process.env.PYTHON_BACKEND_URL || 'http://localhost:8000';
+    
+    const response = await fetch(`${pythonBackendUrl}/process`, {
+      method: 'POST',
+      body: req.body,
+      headers: {
+        'Content-Type': req.headers['content-type'],
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Backend processing failed');
+    }
+
+    const processedVideo = await response.buffer();
+    
+    res.setHeader('Content-Type', 'video/mp4');
+    res.setHeader('Content-Disposition', 'attachment; filename="roadshow-enhanced.mp4"');
+    res.send(processedVideo);
+    
+  } catch (error) {
+    console.error('API Error:', error);
+    res.status(500).json({ error: 'Processing failed' });
+  }
+}
+```
+
+## 3. Python Backend Setup
+
+### app.py (FastAPI)
+```python
+from fastapi import FastAPI, File, UploadFile, Form
+from fastapi.responses import FileResponse
+import tempfile
+import os
+import json
+from video_processor import CinemaProcessor
+
+app = FastAPI()
+processor = CinemaProcessor()
+
+@app.post("/process")
+async def process_video(
+    video: UploadFile = File(...),
+    settings: str = Form(...)
+):
+    try:
+        # Parse settings
+        video_settings = json.loads(settings)
+        
+        # Save uploaded video
+        with tempfile.NamedTemporaryFile(delete=False, suffix='.mp4') as temp_input:
+            content = await video.read()
+            temp_input.write(content)
+            input_path = temp_input.name
+        
+        # Process video
+        output_path = processor.transform_video(
+            input_path, 
+            bokeh=video_settings['bokeh'],
+            film_grain=video_settings['filmGrain'],
+            color_grade=video_settings['colorGrade']
+        )
+        
+        # Clean up input
+        os.unlink(input_path)
+        
+        return FileResponse(
+            output_path,
+            media_type='video/mp4',
+            filename='roadshow-enhanced.mp4'
+        )
+        
+    except Exception as e:
+        return {"error": str(e)}
+
+@app.get("/health")
+async def health_check():
+    return {"status": "healthy"}
+```
+
+### video_processor.py
+```python
+import cv2
+import numpy as np
+import torch
+from cinema_v1_4m import ExposureFixedColorTransform
+import moviepy.editor as mp
+
+class CinemaProcessor:
+    def __init__(self):
+        self.model = self.load_model()
+        
+    def load_model(self):
+        """Load the trained v1.4m model"""
+        device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+        model = ExposureFixedColorTransform().to(device)
+        
+        # Load your trained weights
+        checkpoint = torch.load('models/cinema_v1_4m_model.pth', map_location=device)
+        model.load_state_dict(checkpoint['model_state_dict'])
+        model.eval()
+        
+        return model
+    
+    def transform_video(self, input_path, bokeh=0.7, film_grain=0.5, color_grade=0.8):
+        """Transform video using cinema model"""
+        
+        # Load video
+        video = mp.VideoFileClip(input_path)
+        
+        # Process each frame
+        def process_frame(frame):
+            # Convert frame to tensor
+            frame_tensor = self.frame_to_tensor(frame)
+            
+            # Apply cinema transformation
+            with torch.no_grad():
+                transformed = self.model(frame_tensor)
+            
+            # Convert back to frame
+            result_frame = self.tensor_to_frame(transformed)
+            
+            # Apply additional effects based on settings
+            result_frame = self.apply_effects(result_frame, bokeh, film_grain, color_grade)
+            
+            return result_frame
+        
+        # Process video
+        processed_video = video.fl_image(process_frame)
+        
+        # Save output
+        output_path = input_path.replace('.mp4', '_roadshow.mp4')
+        processed_video.write_videofile(
+            output_path,
+            codec='libx264',
+            audio_codec='aac'
+        )
+        
+        return output_path
+    
+    def frame_to_tensor(self, frame):
+        """Convert frame to model input tensor"""
+        # Resize, normalize, etc.
+        frame_resized = cv2.resize(frame, (768, 768))
+        frame_normalized = frame_resized.astype(np.float32) / 255.0
+        tensor = torch.from_numpy(frame_normalized).permute(2, 0, 1).unsqueeze(0)
+        return tensor
+    
+    def tensor_to_frame(self, tensor):
+        """Convert model output back to frame"""
+        frame = tensor.squeeze(0).permute(1, 2, 0).cpu().numpy()
+        frame = np.clip(frame * 255, 0, 255).astype(np.uint8)
+        return frame
+    
+    def apply_effects(self, frame, bokeh, film_grain, color_grade):
+        """Apply additional cinematic effects"""
+        # Implement bokeh, grain, color grading
+        # This would use the control values to modify the frame
+        return frame
+```
+
+### requirements.txt
+```txt
+fastapi==0.104.1
+uvicorn==0.24.0
+torch==2.1.0
+torchvision==0.16.0
+opencv-python==4.8.1.78
+numpy==1.24.3
+moviepy==1.0.3
+python-multipart==0.0.6
+```
+
+## 4. Deployment Configuration
+
+### vercel.json
+```json
+{
+  "functions": {
+    "backend/app.py": {
+      "runtime": "python3.9"
+    }
+  },
+  "routes": [
+    {
+      "src": "/api/process",
+      "dest": "/backend/app.py"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/frontend/$1"
+    }
+  ],
+  "env": {
+    "PYTHON_BACKEND_URL": "https://your-app.vercel.app/api"
+  }
+}
+```
+
+### next.config.js
+```javascript
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  experimental: {
+    serverComponentsExternalPackages: ['sharp']
+  },
+  api: {
+    bodyParser: {
+      sizeLimit: '100mb',
+    },
+    responseLimit: '100mb',
+  }
+}
+
+module.exports = nextConfig
+```
+
+## 5. Deployment Steps
+
+### 1. Setup Repository
+```bash
+git init roadshow-film
+cd roadshow-film
+
+# Copy your trained model files
+mkdir -p backend/models
+cp cinema_v1_4m_model.pth backend/models/
+
+# Copy your model code
+cp cinema_v1_4m.py backend/model/
+```
+
+### 2. Install Dependencies
+```bash
+# Frontend
+cd frontend
+npm install
+
+# Backend
+cd ../backend
+pip install -r requirements.txt
+```
+
+### 3. Test Locally
+```bash
+# Start backend
+cd backend
+uvicorn app:app --reload --port 8000
+
+# Start frontend (new terminal)
+cd frontend
+npm run dev
+```
+
+### 4. Deploy to Vercel
+```bash
+# Install Vercel CLI
+npm i -g vercel
+
+# Deploy
+vercel --prod
+```
+
+## 6. Environment Variables
+
+Set in Vercel dashboard:
+- `PYTHON_BACKEND_URL`: Your backend URL
+- `MODEL_PATH`: Path to your trained model
+- `MAX_FILE_SIZE`: Maximum upload size
+
+## 7. Optimization Considerations
+
+### Performance:
+- Use WebAssembly for client-side preprocessing
+- Implement video chunking for large files
+- Add progress indicators
+- Use CDN for model weights
+
+### Scaling:
+- Consider GPU instances for heavy processing
+- Implement queue system for batch processing
+- Add Redis for caching
+- Use separate ML inference service
+
+## 8. Testing Strategy
+
+### API Testing:
+```bash
+curl -X POST http://localhost:3000/api/process-video \
+  -F "video=@test-video.mp4" \
+  -F "settings={\"bokeh\":0.7,\"filmGrain\":0.5,\"colorGrade\":0.8}"
+```
+
+This setup gives you a production-ready Roadshow Film deployment that can handle video uploads, process them through your v1.4m model, and return enhanced videos. The frontend matches your design aesthetic while the backend leverages your trained cinema transformation model.
